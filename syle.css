@@ -70,17 +70,19 @@ body{
     top:0px;
     left:25px;
 }
+
+.row{
+    display:flex;
+}
 .col{
     min-width:80px;
-    border: 1px solid red;
+    border: 1px solid;
     min-height: 30px;
     /*display: flex;
     justify-content: center;
     align-items: center;*/
-    font-style: italic;
-    font-size: 1.5rem;
-    font-weight: 100;
     text-align: center;
+    font-style: italic;
 }
 
 .left-col{
@@ -90,7 +92,7 @@ body{
     height:30px;
     background-color: lightgreen;
     text-align: center;
-    border: 1px solid goldenrod;
+    border: 1px solid;
 }
 .grid_container{
     height: calc(100vh - (80px + 30px + 40px));
@@ -101,5 +103,4 @@ body{
     position: absolute;
     top:30px;
     left:25px;
-    background-color: grey;
 }

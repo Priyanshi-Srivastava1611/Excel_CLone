@@ -5,10 +5,26 @@ body{
     box-sizing: border-box;
     
 }
-
-.formula_container{
-    height: 40px;
+/*-------------------------------------formula--------------------------*/
+.formulae_container{
+    height:30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+   
 }
+.address_box{
+    width: 15%;
+}
+.formula_box
+{
+    width: 85%;
+}
+.seperator
+{
+    width: 5%;
+}
+
 
 
 
@@ -92,7 +108,6 @@ body{
     /*display: flex;
     justify-content: center;
     align-items: center;*/
-    text-align: center;
     font-style: italic;
 }
 
@@ -119,7 +134,7 @@ body{
 /*---------------menu-----------------------------------------------------------------------*/
 .menu_container
 {
-    height: 90px;
+    height: 80px;
     display: flex;
     align-items: center;
     background-color: gray;

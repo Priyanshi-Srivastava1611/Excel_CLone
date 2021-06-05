@@ -22,3 +22,30 @@ for(let i=0;i<100;i++){
 }
 
 grid.innerHTML=str;
+let workSheetDB=[]
+function initCurrentSheetDB()
+{
+let sheetDB=[]
+for(i=0;i<100;i++)
+{
+    let row=[]
+    for(j=0;j<26;j++)
+    {
+        let cell={
+            bold:"normal",
+            italic:"normal",
+            underline:"none",
+            fontFamily:"Arial",
+            fontsize:"8",
+            textAlign:"left",
+            value:""
+        }
+        
+        row.push(cell)
+    }
+    sheetDB.push(row)
+}
+workSheetDB.push(sheetDB)
+console.log(workSheetDB)
+}
+initCurrentSheetDB();

@@ -31,16 +31,17 @@ function changesheet(e)
         sheet.classList.remove("active_sheet");
     })
     sheetArr=document.querySelectorAll(".sheet");
-    sheetArr[sheetArr.length-1].classList.add("active-sheet");
+    sheetArr[sheetArr.length-1].classList.add("active_sheet");
     initCurrentSheetDB();
     sheetDB=workSheetDB[idx];
-    newsheet.addEventListener("click",handlesheet)
+    initUI();
+    newsheet.addEventListener("click",handlesheet) 
     
 }
 //make sheet active
 function handlesheet(e)
 {
-    let mysheet= e.currenttarget
+    let mysheet= e.currentTarget
     let sheetArr=document.querySelectorAll(".sheet")
     sheetArr.forEach(function (sheet)
     {
@@ -50,8 +51,9 @@ function handlesheet(e)
     {
     mysheet.classList.add("active_sheet")
     }
-    let sheetIdx = mySheet.getAttribute("sheetIdx");
+    let sheetIdx = mysheet.getAttribute("sheetIdx");
     sheetDB = workSheetDB[sheetIdx - 1];
+    setUI(sheetDB);
 }
 //Its address display on address bar
 for(let i=0;i<Allcells.length;i++)
@@ -213,5 +215,39 @@ function getRidCidFronAddress(address)
     let cid=cellcoladdress-97;
     let rid=Number(cellrowaddress-1)
     return {cid,rid}
+}
+function initUI(){
+    for(let i=0;i<Allcells.length;i++){
+        Allcells[i].style.fontWeight="normal";
+         Allcells[i].style.fontStyle="normal";
+         Allcells[i].style.textDecoration="none";
+         Allcells[i].style.fontSize="10px";
+         Allcells[i].style.textAlign="left";
+         Allcells[i].innerText="";
+     }
+}
+for(let i=0;i<Allcells.length;i++){
+    Allcells[i].addEventListener("blur",function handleCells(){
+        
+        
+        let address=addressBar.value;
+       let {rid,cid}=getRidCidFronAddress(address);
+        let cellObject=sheetDB[rid][cid];
+        let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+        cellObject.value=cell.innerText;
+    })
+}
+function setUI(sheetDB){
+     for(let i=0;i<sheetDB.length;i++){
+         for(let j=0;j<sheetDB[i].length;j++){
+            let cell=document.querySelector(`.col[rid="${i}"][cid="${j}"]`);
+            let{bold,italic,underline,fontFamily,fontSize,halign,value}=sheetDB[i][j];
+            cell.style.fontWeight=bold==true?"bold":"normal";
+            cell.style.fontStyle=italic==true?"italic":"normal";
+            cell.style.textDecoration=underline==true?"underline":"none";
+            cell.innerText=value;
+
+         }
+     }
 }
 

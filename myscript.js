@@ -3,7 +3,8 @@ let sheetlist=document.querySelector(".sheet_list")
 let firstsheet=document.querySelector(".sheet")
 let Allcells=document.querySelectorAll(".grid .col")
 let addressBar=document.querySelector(".address_box")
-let textalign=document.querySelectorAll(".allignment_container")
+//let textalign=document.querySelectorAll(".allignment_container")
+let allAlignBtns = document.querySelectorAll(".alignment-container>input");
 let leftBtn=document.querySelector(".left");
 let rightBtn=document.querySelector(".right");
 let centerBtn=document.querySelector(".center");
@@ -25,7 +26,7 @@ function changesheet(e)
     let newsheet=document.createElement("div")
     newsheet.setAttribute("class","sheet")
     newsheet.setAttribute("sheetIdx",idx+1)
-    newsheet.innerText=`Sheet ${idx+2}`
+    newsheet.innerText=`Sheet ${idx+1}`
     sheetlist.appendChild(newsheet)
     sheetArr.forEach(function(sheet){
         sheet.classList.remove("active_sheet");
@@ -68,7 +69,7 @@ for(let i=0;i<Allcells.length;i++)
         let address=coladdress+rowaddress
         addressBar.value=address
         Allcells[i].style.border = "2px solid green"
-        cellObject=sheetDB[rid][cid]
+        let cellObject=sheetDB[rid][cid]
         if(cellObject.bold==true)
         {
             boldElement.classList.add("active-btn")
@@ -115,12 +116,12 @@ centerBtn.addEventListener("click", function(){
     let {rid,cid}=getRidCidFronAddress(address);
     let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.textAlign="center";
-    /*for(let i=0;i<allAlignBtns.length;i++){
+    for(let i=0;i<allAlignBtns.length;i++){
         allAlignBtns[i].classList.remove("active-btn");
     }
     centerBtn.classList.add("active-btn");
     let cellObject=sheetDB[rid][cid];
-    cellObject.halign="center";*/
+    cellObject.halign="center";
 })
 //making right alligned
 rightBtn.addEventListener("click", function(){
@@ -128,12 +129,12 @@ rightBtn.addEventListener("click", function(){
     let {rid,cid}=getRidCidFronAddress(address);
     let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.textAlign="right";
-    /*for(let i=0;i<allAlignBtns.length;i++){
+    for(let i=0;i<allAlignBtns.length;i++){
         allAlignBtns[i].classList.remove("active-btn");
     }
     rightBtn.classList.add("active-btn");
     let cellObject=sheetDB[rid][cid];
-    cellObject.halign="right";*/
+    cellObject.halign="right";
 })
 //making bold text
 boldElement.addEventListener("click", function(){
@@ -141,16 +142,20 @@ boldElement.addEventListener("click", function(){
     let address=addressBar.value;
     let {rid,cid}=getRidCidFronAddress(address);
     let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    let cellObject=sheetDB[rid][cid]
     if(isActive==false)
         {
             cell.style.fontWeight="bold";  
             boldElement.classList.add("active-btn")
+            cellObject.bold=true
 
         }
     else
         {
             cell.style.fontWeight="normal";  
             boldElement.classList.remove("active-btn")
+            cellObject.bold=false
+
         }
 })
 //making italic text
@@ -159,16 +164,18 @@ italicElement.addEventListener("click", function(){
     let address=addressBar.value;
     let {rid,cid}=getRidCidFronAddress(address);
     let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    let cellObject=sheetDB[rid][cid]
     if(isActive==false)
         {
             cell.style.fontStyle="italic";  
             italicElement.classList.add("active-btn")
-
+            cellObject.bold=true
         }
     else
         {
             cell.style.fontStyle="normal";  
             italicElement.classList.remove("active-btn")
+            cellObject.bold=false
         }
 })
 //making text underlined
@@ -177,16 +184,18 @@ underlineElement.addEventListener("click", function(){
     let address=addressBar.value;
     let {rid,cid}=getRidCidFronAddress(address);
     let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    let cellObject=sheetDB[rid][cid]
     if(isActive==false)
         {
             cell.style.textDecoration="underline";  
             underlineElement.classList.add("active-btn")
-
+            cellObject.bold=true
         }
     else
         {
             cell.style.textDecoration="none";  
             underlineElement.classList.remove("active-btn")
+            cellObject.bold=false
         }
 })
 //making changes in font
@@ -227,7 +236,8 @@ function initUI(){
      }
 }
 for(let i=0;i<Allcells.length;i++){
-    Allcells[i].addEventListener("blur",function handleCells(){
+    Allcells[i].addEventListener("blur",function handlecell()
+    {
         
         
         let address=addressBar.value;
@@ -241,7 +251,7 @@ function setUI(sheetDB){
      for(let i=0;i<sheetDB.length;i++){
          for(let j=0;j<sheetDB[i].length;j++){
             let cell=document.querySelector(`.col[rid="${i}"][cid="${j}"]`);
-            let{bold,italic,underline,fontFamily,fontSize,halign,value}=sheetDB[i][j];
+            let{bold,italic,underline,fontFamily,fontSize,textAlign,value}=sheetDB[i][j];
             cell.style.fontWeight=bold==true?"bold":"normal";
             cell.style.fontStyle=italic==true?"italic":"normal";
             cell.style.textDecoration=underline==true?"underline":"none";

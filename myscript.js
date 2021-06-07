@@ -229,18 +229,7 @@ function initUI(){
          Allcells[i].innerText="";
      }
 }
-for(let i=0;i<Allcells.length;i++){
-    Allcells[i].addEventListener("blur",function handlecell()
-    {
-        
-        
-        let address=addressBar.value;
-       let {rid,cid}=getRidCidFronAddress(address);
-        let cellObject=sheetDB[rid][cid];
-        let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-        cellObject.value=cell.innerText;
-    })
-}
+
 function setUI(sheetDB){
      for(let i=0;i<sheetDB.length;i++){
          for(let j=0;j<sheetDB[i].length;j++){
@@ -256,7 +245,18 @@ function setUI(sheetDB){
 }
 
 
-//Formula bar
+//************************Formula bar
+for(let i=0;i<Allcells.length;i++){
+    Allcells[i].addEventListener("blur",function handlecell()
+    {   
+        let address=addressBar.value;
+       let {rid,cid}=getRidCidFronAddress(address);
+        let cellObject=sheetDB[rid][cid];
+        let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+        cellObject.value=cell.innerText;
+        changeChildrens(cellObject)
+    })
+}
 formulaInput.addEventListener("keydown",function(e)
 {
     if(e.key=="Enter" && formulaInput.value!="")
@@ -276,7 +276,7 @@ formulaInput.addEventListener("keydown",function(e)
         }*/
         let evaluatedValue = evaluateFormula(Newformula);
         setUIByFormula(evaluatedValue, rid, cid);
-        setContentInDB(evaluatedValue,Newformula,rid,cid,address)
+        setFormula(evaluatedValue,Newformula,rid,cid,address)
     }
 
 })
@@ -306,13 +306,13 @@ function setUIByFormula(value, rid, cid)
     document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`).innerText = value;
     //  parent add yourself as a
 }
-function setContentInDB(value,formula,rid,cid,address)
+function setFormula(value,formula,rid,cid,address)
 {
     let cellObject=sheetDB[rid][cid]
     cellObject.value=value
     cellObject.formula=formula
     let formulaTokens = formula.split(" ");
-    (A1 + A2)
+    //(A1 + A2)
     for (let i = 0; i < formulaTokens.length; i++) {
         let firstCharOfToken = formulaTokens[i].charCodeAt(0);
         if (firstCharOfToken >= 97 && firstCharOfToken <= 122) {
@@ -322,6 +322,21 @@ function setContentInDB(value,formula,rid,cid,address)
             //  getting value from  db
             cellObject.children.push(address)
         }
+    }
+}
+function changeChildrens(cellObject)
+{
+    let childrens = cellObject.children;
+    for (let i = 0; i < childrens.length; i++) {
+        let chAddress = childrens[i];
+        let chRICIObj = getRidCidFronAddress(chAddress);
+        let chObj = sheetDB[chRICIObj.rid][chRICIObj.cid];
+        let formula = chObj.formula;
+        let evaluatedValue = evaluateFormula(formula);
+        setUIByFormula(evaluatedValue, chRICIObj.rid, chRICIObj.cid);
+        chObj.value = evaluatedValue;
+        // your children have children
+        changeChildrens(chObj);
     }
 }
 

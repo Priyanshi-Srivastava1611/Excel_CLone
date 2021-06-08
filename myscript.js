@@ -95,6 +95,14 @@ for(let i=0;i<Allcells.length;i++)
         {
             underlineElement.classList.remove("active-btn")
         }
+        if(cellObject.formula!="")
+        {
+            formulaInput.value=cellObject.formula
+        }
+        else
+        {
+            formulaInput.value=""
+        }
     
     })
 }
@@ -246,16 +254,25 @@ function setUI(sheetDB){
 
 
 //************************Formula bar
-for(let i=0;i<Allcells.length;i++){
+for(let i=0;i<Allcells.length;i++)
+{
     Allcells[i].addEventListener("blur",function handlecell()
     {   
         let address=addressBar.value;
        let {rid,cid}=getRidCidFronAddress(address);
         let cellObject=sheetDB[rid][cid];
         let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-        cellObject.value=cell.innerText;
-        changeChildrens(cellObject)
-    })
+        if (cellObject.value == cell.innerText) {
+            return;
+        }
+        if (cellObject.formula) {
+            removeFormula(cellObject, address);
+        }
+        // db entry
+        cellObject.value = cell.innerText;
+        // depend update 
+        changeChildrens(cellObject);
+});
 }
 formulaInput.addEventListener("keydown",function(e)
 {
@@ -267,16 +284,17 @@ formulaInput.addEventListener("keydown",function(e)
         // getCurrentCell
         let { rid, cid } = getRidCidFronAddress(address);
         let cellObject = sheetDB[rid][cid];
-        /*let prevFormula = cellObject.formula;
+        let prevFormula = cellObject.formula;
         if (prevFormula == Newformula) {
             return;
         }
         if (prevFormula != "" && prevFormula != Newformula) {
             removeFormula(cellObject, address);
-        }*/
+        }
         let evaluatedValue = evaluateFormula(Newformula);
         setUIByFormula(evaluatedValue, rid, cid);
         setFormula(evaluatedValue,Newformula,rid,cid,address)
+        changeChildrens(cellObject);
     }
 
 })
@@ -339,6 +357,29 @@ function changeChildrens(cellObject)
         changeChildrens(chObj);
     }
 }
+function removeFormula(cellObject,address)
+{
+    //cellObject.value=value
+    formula=cellObject.formula
+    let formulaTokens = formula.split(" ");
+    //(A1 + A2)
+    for (let i = 0; i < formulaTokens.length; i++)
+    {
+        let firstCharOfToken = formulaTokens[i].charCodeAt(0);
+        if (firstCharOfToken >= 97 && firstCharOfToken <= 122)
+        {
+            // console.log(formulaTokens[i]);
+            let parentRIdCid = getRidCidFronAddress(formulaTokens[i]);
+            let parentcellObject = sheetDB[parentRIdCid.rid][parentRIdCid.cid];
+            //  getting value from  db
+            let childrens=parentcellObject.children
+            let idx=childrens.indexOf(address)
+            childrens.splice(idx,1)
+        }
+    }
+    cellObject.formula = "";
+}
+
 
 
 

@@ -4,6 +4,8 @@ let firstsheet=document.querySelector(".sheet")
 let Allcells=document.querySelectorAll(".grid .col")
 let addressBar=document.querySelector(".address_box")
 //let textalign=document.querySelectorAll(".allignment_container")
+let color=document.querySelector(".color")
+let bgcolor=document.querySelector(".bg-color")
 let formulaInput=document.querySelector(".formula_box")
 let allAlignBtns = document.querySelectorAll(".alignment-container>input");
 let leftBtn=document.querySelector(".left");
@@ -224,6 +226,23 @@ fontFamily.addEventListener("change",function()
     let {rid,cid}=getRidCidFronAddress(address);
     let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.fontFamily=fontfam;
+})
+color.addEventListener("change",function()
+{
+    let mycolor=color.value
+    let address=addressBar.value;
+    let {rid,cid}=getRidCidFronAddress(address);
+    let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    cell.style.color=mycolor
+
+})
+bgcolor.addEventListener("change",function()
+{
+    let mybg=bgcolor.value
+    let address=addressBar.value;
+    let {rid,cid}=getRidCidFronAddress(address);
+    let cell=document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    cell.style.backgroundColor=mybg
 })
 // getting rid and cid of a cell
 
